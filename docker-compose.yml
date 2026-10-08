@@ -1,0 +1,54 @@
+services:
+  php:
+    build: .
+    container_name: laravel_financa_php
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    networks:
+      - laravel_financa
+
+  nginx:
+    image: nginx:alpine
+    container_name: laravel_financa_nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/var/www/html
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php
+    networks:
+      - laravel_financa
+
+  composer:
+    image: composer:2
+    container_name: laravel_financa_composer
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    networks:
+      - laravel_financa
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2025-latest
+    container_name: laravel_financa_sqlserver
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: "Developer"
+      MSSQL_SA_PASSWORD: "${MSSQL_SA_PASSWORD}"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    networks:
+      - laravel_financa
+    # restart: unless-stopped
+
+networks:
+  laravel_financa:
+    driver: bridge
+
+volumes:
+  sqlserver_data:
+    driver: local
