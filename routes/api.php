@@ -1,8 +1,11 @@
 <?php
 
-use Illuminate\Http\Request;
+use Api\Models\Autenticacao\AutenticacaoController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+Route::group([
+    'as' => 'api.',
+], function () {
+    Route::post('/login', [AutenticacaoController::class, 'login'])->name('login');
+    Route::post('/register', [AutenticacaoController::class, 'register'])->name('register');
+});
