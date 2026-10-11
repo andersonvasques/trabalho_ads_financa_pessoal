@@ -21,15 +21,6 @@ services:
     networks:
       - laravel_financa
 
-  composer:
-    image: composer:2
-    container_name: laravel_financa_composer
-    working_dir: /var/www/html
-    volumes:
-      - ./:/var/www/html
-    networks:
-      - laravel_financa
-
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2025-latest
     container_name: laravel_financa_sqlserver

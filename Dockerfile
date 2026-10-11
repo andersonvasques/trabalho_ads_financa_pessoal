@@ -4,6 +4,8 @@ RUN apt-get update \
     && apt-get install -y \
         curl \
         gnupg \
+        git \
+        unzip \
         unixodbc-dev \
     && curl -sSL https://packages.microsoft.com/keys/microsoft.asc \
         | gpg --dearmor \
@@ -14,8 +16,12 @@ RUN apt-get update \
     && ACCEPT_EULA=Y apt-get install -y msodbcsql18 \
     && pecl install sqlsrv pdo_sqlsrv \
     && docker-php-ext-enable sqlsrv pdo_sqlsrv \
+    && docker-php-ext-install bcmath \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+
+# Composer dentro do container da aplicação
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 # Faz o www-data usar o mesmo UID/GID do usuário do host,
 # para conseguir escrever em storage/ e bootstrap/cache/ montados via volume
