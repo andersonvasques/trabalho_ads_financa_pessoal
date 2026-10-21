@@ -31,3 +31,5 @@ RUN groupmod -o -g ${GID} www-data \
     && usermod -o -u ${UID} -g ${GID} www-data
 
 WORKDIR /var/www/html
+
+USER www-data
